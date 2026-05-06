@@ -121,31 +121,26 @@ select{background:var(--bg);border:1px solid var(--border);border-radius:6px;pad
 
   <div class="page active" id="page-dashboard">
     <div class="kpi-row" style="grid-template-columns:repeat(5,1fr);">
-  <!-- Patuh -->
   <div class="kpi-card" style="--kc:#00c9a7;cursor:pointer;" onclick="filterByStatus('patuh')">
     <div class="kpi-label">✅ Patuh</div>
     <div class="kpi-value" id="kPatuh">-</div>
     <div class="kpi-sub">0 poin</div>
   </div>
-  <!-- Patuh Dengan Catatan -->
   <div class="kpi-card" style="--kc:#f7b731;cursor:pointer;" onclick="filterByStatus('catatan')">
     <div class="kpi-label">⚠️ Dgn Catatan</div>
     <div class="kpi-value" id="kCatatan">-</div>
     <div class="kpi-sub">1-2 poin</div>
   </div>
-  <!-- Kurang Patuh -->
   <div class="kpi-card" style="--kc:#ee5a24;cursor:pointer;" onclick="filterByStatus('kurang')">
-    <div class="kpi-label">🔶 Kurang</div>
+    <div class="kpi-label">🔶 Kurang Patuh</div>
     <div class="kpi-value" id="kKurang">-</div>
     <div class="kpi-sub">3-4 poin</div>
   </div>
-  <!-- Tidak Patuh -->
   <div class="kpi-card" style="--kc:#e55039;cursor:pointer;" onclick="filterByStatus('tidak')">
     <div class="kpi-label">🚫 Tdk Patuh</div>
     <div class="kpi-value" id="kTidak">-</div>
     <div class="kpi-sub">5-7 poin</div>
   </div>
-  <!-- Sangat Tidak Patuh -->
   <div class="kpi-card" style="--kc:#922b21;cursor:pointer;" onclick="filterByStatus('sangat_tidak')">
     <div class="kpi-label">💀 Sgt Tdk Patuh</div>
     <div class="kpi-value" id="kSangatTidak">-</div>
@@ -269,27 +264,34 @@ function refreshAll(){
   var kurang = allData.filter(function(d) { return d.status === 'kurang'; }).length;
   var tidak = allData.filter(function(d) { return d.status === 'tidak'; }).length;
   var sangat = allData.filter(function(d) { return d.status === 'sangat_tidak'; }).length;
-  
   var tp = allData.reduce(function(s,d) { return s + d.poin; }, 0);
   var av = t > 0 ? Math.round((tp / t) * 100) / 100 : 0;
   var pc = t > 0 ? Math.round((patuh / t) * 1000) / 10 : 0;
   
-  // Update 5 KPI Cards
-  $('kPatuh').textContent = patuh;
-  $('kRate').textContent = pc + '%';
-  $('kCatatan').textContent = catatan;
-  $('kKurang').textContent = kurang;
-  $('kTidak').textContent = tidak;
-  $('kSangatTidak').textContent = sangat;
+  // Update KPI Cards
+  var kPatuh = document.getElementById('kPatuh');
+  var kCatatan = document.getElementById('kCatatan');
+  var kKurang = document.getElementById('kKurang');
+  var kTidak = document.getElementById('kTidak');
+  var kSangatTidak = document.getElementById('kSangatTidak');
   
-  // Update ringkasan
-  $('sTot').textContent = t;
-  $('sAvg').textContent = av;
-  $('sPoin').textContent = tp;
+  if (kPatuh) kPatuh.textContent = patuh;
+  if (kCatatan) kCatatan.textContent = catatan;
+  if (kKurang) kKurang.textContent = kurang;
+  if (kTidak) kTidak.textContent = tidak;
+  if (kSangatTidak) kSangatTidak.textContent = sangat;
   
+  // Update Ringkasan
+  var sTot = document.getElementById('sTot');
+  var sAvg = document.getElementById('sAvg');
+  var sPoin = document.getElementById('sPoin');
+  if (sTot) sTot.textContent = t;
+  if (sAvg) sAvg.textContent = av;
+  if (sPoin) sPoin.textContent = tp;
+  
+  // Warna KPI Patuh mengikuti persentase
   var c = getColor(pc);
-  $('kPatuh').style.color = c;
-  $('kRate').style.color = c;
+  if (kPatuh) kPatuh.style.color = c;
   
   renderBar();
   renderDonut();
